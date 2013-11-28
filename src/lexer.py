@@ -11,6 +11,7 @@ tokens = (
 	'STRING',
 	'EQUALS',
 	'SEMICOLON',
+	'COMMA',
 	'ADD_OP',
 	'MIN_OP',
 	'MUL_OP',
@@ -21,22 +22,23 @@ tokens = (
 literals = '();={}'
 t_SEMICOLON = r';'
 t_EQUALS = r'='
+t_COMMA = r','
 t_ignore  = ' \t'
 
 def t_ADD_OP(t):
-	r'+'
+	r'\+'
 	return t
 
 def t_MIN_OP(t):
-	r'-'
+	r'\-'
 	return t
 	
 def t_MUL_OP(t):
-	r'*'
+	r'\*'
 	return t
 
 def t_DIV_OP(t):
-	r'/'
+	r'\/'
 	return t
 
 def t_MOD_OP(t):
