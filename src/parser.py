@@ -3,16 +3,56 @@ import ply.yacc as yacc
 from lexer import tokens
 import AST
 
+operations = {
+	'+' : lambda x,y: x+y,
+	'-' : lambda x,y: x-y,
+	'*' : lambda x,y: x*y,
+	'/' : lambda x,y: x/y,
+}
+
+precedence = (
+    ('left', 'ADD_OP', 'MIN_OP'),
+    ('left', 'MUL_OP', 'DIV_OP'),
+)
+
 vars = {}
 
+def p_program_statement(p):
+	''' program : statement SEMICOLON '''
+	p[0] = AST.ProgramNode(p[1])
 
-def p_expression_number(p):
-	'''expression : NUMBER'''
+def p_program_recursive(p):
+	''' program : statement SEMICOLON program '''
+	p[0] = AST.ProgramNode([p[1]] + p[3].children)
+
+def p_statement(p):
+	''' statement : assignation '''
 	p[0] = p[1]
 
+def p_assignment(p):
+	''' assignation : VAR IDENTIFIER EQUALS expression '''
+	p[0] = AST.AssignNode((AST.TokenNode(p[2]), p[4]))
+
+def p_expression_identifier(p):
+	'''
+		expression : NUMBER
+		| STRING
+	'''
+	p[0] = AST.TokenNode(p[1])
+
 def p_expression_parenthesis(p):
-    '''expression : '(' expression ')' '''
+    ''' expression : '(' expression ')' '''
     p[0] = p[2]
+
+#def p_expression_op(p):
+#	'''expression : expression ADD_OP expression
+#			| expression MUL_OP expression '''
+#	p[0] = AST.OpNode(p[2], [p[1], p[3]])
+
+
+
+
+
 
 
 def p_error(p):
