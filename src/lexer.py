@@ -5,8 +5,13 @@ reserved_words = (
 	'for'
 )
 
+methods = (
+	'setPage'
+)
+
 tokens = (
 	'IDENTIFIER',
+	'METHOD',
 	'NUMBER',
 	'STRING',
 	'EQUALS',
@@ -17,7 +22,7 @@ tokens = (
 	'MUL_OP',
 	'DIV_OP',
 	'MOD_OP'
-) + tuple(map(lambda s:s.upper(), reserved_words))
+) + tuple(map(lambda s:s.upper(), reserved_words)) + tuple(map(lambda s:s.upper(), methods))
 
 literals = '();={}'
 t_SEMICOLON = r';'
@@ -59,12 +64,18 @@ def t_STRING(t):
 	t.value = t.value[1:-1]
 	return t
 
+def t_METHOD(t):
+	r'([A-Za-z_]+)\('
+	if t.value in reserved_words:
+		t.type = t.value.upper()
+	return t
+
 def t_IDENTIFIER(t):
 	r'[A-Za-z_]\w*'
 	if t.value in reserved_words:
 		t.type = t.value.upper()
 	return t
-	
+
 def t_newline(t):
 	r'\n+'
 	t.lexer.lineno += len(t.value)
