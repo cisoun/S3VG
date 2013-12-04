@@ -29,15 +29,35 @@ def p_statement(p):
 	''' statement : assignation '''
 	p[0] = p[1]
 
+def p_arguments(p):
+	''' arguments : expression COMMA arguments '''
+	p[0] = AST.ProgramNode([p[1]] + p[3].children)
+
+def p_arguments(p):
+	''' arguments : expression COMMA arguments '''
+	p[0] = AST.ProgramNode([p[1]] + p[3].children)
+
+def p_statement_setpage(p):
+    ''' statement : SETPAGE '(' arguments ')' '''
+    p[0] = AST.SetPageNode(p[3])
+
 def p_assignment(p):
 	''' assignation : VAR IDENTIFIER EQUALS expression '''
 	p[0] = AST.AssignNode((AST.TokenNode(p[2]), p[4]))
+
+def p_expression(p):
+	''' expression : expression COMMA '''
+	#p[0] = AST.TokenNode([p[1]] + p[3].children)
+	p[0] = AST.TokenNode(p[1])
+
+#def p_expression_recursive(p):
+#	''' expression : expression COMMA expression '''
+#	p[0] = AST.TokenNode([p[1]] + p[3].children)
 
 def p_expression_identifier(p):
 	'''
 		expression : NUMBER
 		| STRING
-		| expression
 	'''
 	p[0] = AST.TokenNode(p[1])
 
@@ -60,8 +80,8 @@ def p_error(p):
 	print("Syntax error in line %d" % p.lineno)
 	yacc.errok()
 
-#def parse(program):
-#    return yacc.parse(program)
+def parse(program):
+    return yacc.parse(program)
 
 yacc.yacc(outputdir='generated')
 
