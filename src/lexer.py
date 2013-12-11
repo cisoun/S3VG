@@ -2,7 +2,8 @@ import ply.lex as lex
 
 reserved_words = (
 	'var',
-	'for'
+	'for',
+	'to'
 )
 
 methods = (

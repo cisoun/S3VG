@@ -1,12 +1,8 @@
 var rouge = "#f30";
+var neuf = 9;
 
-SetPage(500, 500, "#fff");
+setPage(neuf, 500, "#fff");
 
-fillColor(rouge);
-rect(10, 10, 100, 100);
-
-strokeWidth(5)
-strokeColor("#3f3");
 for i = 0 to 1 {
-	line(0, i, i * 100, 0);
+	setPage(neuf, 500, "#fff");
 }

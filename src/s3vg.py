@@ -35,6 +35,14 @@ def execute(self):
 def execute(self):
     vars[self.children[0].tok] = self.children[1].execute()
 
+@addToClass(AST.ForNode)
+def execute(self):
+	i = self.children[0].execute()
+	first = self.children[1].execute()
+	last = self.children[2].execute()
+	for i in range[first, last]:
+		self.children[3].execute()
+
 @addToClass(AST.PrintNode)
 def execute(self):
     print (self.children[0].execute())

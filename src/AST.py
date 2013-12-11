@@ -124,6 +124,9 @@ class PrintNode(Node):
 class WhileNode(Node):
     type = 'while'
 
+class ForNode(Node):
+	type = 'for'
+
 class ParametersNode(Node):
 	type = 'parameters'
 

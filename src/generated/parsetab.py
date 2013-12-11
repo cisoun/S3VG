@@ -5,9 +5,9 @@ _tabversion = '3.2'
 
 _lr_method = 'LALR'
 
-_lr_signature = b'z\x0fX\xf2\xfd\xd1\x17\xf8_v\xc7d\xae\x08\t\x82'
+_lr_signature = b'\xd0\xb6\x8a\xaa{\xf0H\xba@\xbd\xef\xda\xa6\x91\x1d\xec'
     
-_lr_action_items = {'STRING':([8,10,13,18,],[11,11,11,11,]),'SEMICOLON':([1,5,11,12,16,19,20,21,],[6,-3,-9,-8,-6,-5,-7,-10,]),'IDENTIFIER':([2,],[7,]),'COMMA':([11,12,14,16,17,18,20,21,22,],[-9,-8,18,20,20,-7,-7,-10,20,]),'NUMBER':([8,10,13,18,],[12,12,12,12,]),'SETPAGE':([0,6,],[4,4,]),'(':([4,8,10,13,18,],[8,13,13,13,13,]),'EQUALS':([7,],[10,]),'$end':([3,6,9,],[0,-1,-2,]),'VAR':([0,6,],[2,2,]),')':([11,12,15,17,20,21,22,],[-9,-8,19,21,-7,-10,-4,]),}
+_lr_action_items = {'FOR':([0,12,36,],[1,1,1,]),'IDENTIFIER':([1,6,11,25,],[9,13,18,18,]),'}':([7,12,21,37,38,],[-2,-1,-3,38,-14,]),'TO':([23,],[30,]),'FILLCOLOR':([0,12,36,],[2,2,2,]),'COMMA':([16,17,18,20,26,28,29,32,33,35,],[-9,-10,-8,25,32,-17,-18,-7,32,-19,]),'{':([34,],[36,]),')':([16,17,18,19,20,28,29,31,32,33,35,],[-9,-10,-8,24,-12,-17,-18,-11,-7,35,-19,]),'(':([2,8,22,27,],[11,11,27,27,]),'SETPAGE':([0,12,36,],[8,8,8,]),'NUMBER':([11,15,22,25,27,30,],[17,23,28,17,28,34,]),'EQUALS':([9,13,],[15,22,]),'$end':([3,7,12,21,38,],[0,-2,-1,-3,-14,]),'VAR':([0,12,36,],[6,6,6,]),'SEMICOLON':([4,5,7,10,14,24,26,28,29,32,35,38,],[-4,12,-5,-16,-15,-13,-6,-17,-18,-7,-19,-14,]),'STRING':([11,22,25,27,],[16,29,16,29,]),}
 
 _lr_action = { }
 for _k, _v in _lr_action_items.items():
@@ -16,7 +16,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'arguments':([8,],[15,]),'expression':([8,10,13,18,],[14,16,17,22,]),'assignation':([0,6,],[5,5,]),'program':([0,6,],[3,9,]),'statement':([0,6,],[1,1,]),}
+_lr_goto_items = {'expression':([22,27,],[26,33,]),'assignation':([0,12,36,],[4,4,4,]),'parameters':([2,8,],[10,14,]),'statement':([0,12,36,],[5,5,5,]),'program':([0,12,36,],[3,21,37,]),'structure':([0,12,36,],[7,7,7,]),'argument':([11,25,],[20,20,]),'arguments':([11,25,],[19,31,]),}
 
 _lr_goto = { }
 for _k, _v in _lr_goto_items.items():
@@ -26,14 +26,23 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> program","S'",1,None,None,None),
-  ('program -> statement SEMICOLON','program',2,'p_program_statement','./parser.py',21),
-  ('program -> statement SEMICOLON program','program',3,'p_program_recursive','./parser.py',25),
-  ('statement -> assignation','statement',1,'p_statement','./parser.py',29),
-  ('arguments -> expression COMMA expression','arguments',3,'p_arguments','./parser.py',33),
-  ('statement -> SETPAGE ( arguments )','statement',4,'p_statement_setpage','./parser.py',37),
-  ('assignation -> VAR IDENTIFIER EQUALS expression','assignation',4,'p_assignment','./parser.py',41),
-  ('expression -> expression COMMA','expression',2,'p_expression','./parser.py',45),
-  ('expression -> NUMBER','expression',1,'p_expression_identifier','./parser.py',55),
-  ('expression -> STRING','expression',1,'p_expression_identifier','./parser.py',56),
-  ('expression -> ( expression )','expression',3,'p_expression_parenthesis','./parser.py',61),
+  ('program -> statement SEMICOLON','program',2,'p_program_statement','./parser.py',22),
+  ('program -> structure','program',1,'p_program_statement','./parser.py',23),
+  ('program -> statement SEMICOLON program','program',3,'p_program_recursive','./parser.py',28),
+  ('statement -> assignation','statement',1,'p_statement','./parser.py',33),
+  ('statement -> structure','statement',1,'p_statement','./parser.py',34),
+  ('assignation -> VAR IDENTIFIER EQUALS expression','assignation',4,'p_assignment','./parser.py',39),
+  ('expression -> expression COMMA','expression',2,'p_expression','./parser.py',43),
+  ('argument -> IDENTIFIER','argument',1,'p_argument','./parser.py',51),
+  ('argument -> STRING','argument',1,'p_argument','./parser.py',52),
+  ('argument -> NUMBER','argument',1,'p_argument','./parser.py',53),
+  ('arguments -> argument COMMA arguments','arguments',3,'p_argument_recursive','./parser.py',58),
+  ('arguments -> argument','arguments',1,'p_argument_recursive','./parser.py',59),
+  ('parameters -> ( arguments )','parameters',3,'p_parameters','./parser.py',67),
+  ('structure -> FOR IDENTIFIER EQUALS NUMBER TO NUMBER { program }','structure',9,'p_structure_for','./parser.py',71),
+  ('statement -> SETPAGE parameters','statement',2,'p_statement_setpage','./parser.py',75),
+  ('statement -> FILLCOLOR parameters','statement',2,'p_statement_fillcolor','./parser.py',79),
+  ('expression -> NUMBER','expression',1,'p_expression_identifier','./parser.py',85),
+  ('expression -> STRING','expression',1,'p_expression_identifier','./parser.py',86),
+  ('expression -> ( expression )','expression',3,'p_expression_parenthesis','./parser.py',91),
 ]

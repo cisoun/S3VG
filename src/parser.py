@@ -17,26 +17,43 @@ precedence = (
 
 vars = {}
 
+
 def p_program_statement(p):
-	''' program : statement SEMICOLON '''
+	''' 
+		program : statement SEMICOLON
+		| structure
+	'''
 	p[0] = AST.ProgramNode(p[1])
 
 def p_program_recursive(p):
 	''' program : statement SEMICOLON program '''
 	p[0] = AST.ProgramNode([p[1]] + p[3].children)
 
+def p_structure_for(p):
+	''' structure : FOR IDENTIFIER EQUALS NUMBER TO NUMBER '{' program '}' '''
+	p[0] = AST.ForNode([AST.TokenNode(p[2]), AST.TokenNode(p[4]), AST.TokenNode(p[6]), p[8]])
+
+
 def p_assignment(p):
 	''' assignation : VAR IDENTIFIER EQUALS expression '''
 	p[0] = AST.AssignNode((AST.TokenNode(p[2]), p[4]))
 
+
 def p_expression(p):
 	''' expression : expression COMMA '''
-	#p[0] = AST.TokenNode([p[1]] + p[3].children)
 	p[0] = AST.TokenNode(p[1])
 
-def p_statement(p):
-	''' statement : assignation '''
-	p[0] = p[1]
+def p_expression_identifier(p):
+	'''
+		expression : NUMBER
+		| STRING
+	'''
+	p[0] = AST.TokenNode(p[1])
+
+def p_expression_parenthesis(p):
+    ''' expression : '(' expression ')' '''
+    p[0] = p[2]
+
 
 def p_argument(p):
 	'''
@@ -57,6 +74,14 @@ def p_argument_recursive(p):
 def p_parameters(p):
 	''' parameters : '(' arguments ')' '''
 	p[0] = AST.ParametersNode(p[2])
+
+
+def p_statement(p):
+	''' 
+		statement : assignation
+		| structure
+	'''
+	p[0] = p[1]
 
 def p_statement_circle(p):
     ''' statement : CIRCLE parameters '''
@@ -110,30 +135,9 @@ def p_statement_strokewidth(p):
     ''' statement : STROKEWIDTH parameters '''
     p[0] = AST.StrokeWidthNode(p[2])
 
-def p_expression_identifier(p):
-	'''
-		expression : NUMBER
-		| STRING
-	'''
-	p[0] = AST.TokenNode(p[1])
-
-def p_expression_parenthesis(p):
-    ''' expression : '(' expression ')' '''
-    p[0] = p[2]
-
-#def p_expression_op(p):
-#	'''expression : expression ADD_OP expression
-#			| expression MUL_OP expression '''
-#	p[0] = AST.OpNode(p[2], [p[1], p[3]])
-
-
-
-
-
-
 
 def p_error(p):
-	print("Syntax error in line %d" % p.lineno)
+	print("Syntax error at '%s'" % p.value)
 	yacc.errok()
 
 def parse(program):
