@@ -44,11 +44,15 @@ def execute(self):
     print (self.children[0].execute())
     print (self.children[1].execute())
     print (self.children[2].execute())
-    
-@addToClass(AST.WhileNode)
+
+@addToClass(AST.FillColorNode)
 def execute(self):
-    while self.children[0].execute():
-        self.children[1].execute()
+    print (self.children[0].execute())
+    
+#@addToClass(AST.WhileNode)
+#def execute(self):
+#    while self.children[0].execute():
+#        self.children[1].execute()
 
 if __name__ == "__main__":
     from parser import parse

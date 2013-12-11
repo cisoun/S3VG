@@ -65,6 +65,9 @@ def p_statement_setpage(p):
     ''' statement : SETPAGE parameters '''
     p[0] = AST.SetPageNode(p[2])
 
+def p_statement_fillcolor(p):
+    ''' statement : FILLCOLOR parameters '''
+    p[0] = AST.FillColorNode(p[2])
 
 def p_expression_identifier(p):
 	'''
