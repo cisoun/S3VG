@@ -39,13 +39,70 @@ def execute(self):
 def execute(self):
     print (self.children[0].execute())
 
+@addToClass(AST.CircleNode)
+def execute(self):
+    print (self.children[0].execute())
+    print (self.children[1].execute())
+    print (self.children[2].execute())
+
+@addToClass(AST.LineNode)
+def execute(self):
+    print (self.children[0].execute())
+    print (self.children[1].execute())
+    print (self.children[2].execute())
+    print (self.children[3].execute())
+
+@addToClass(AST.PgoneNode)
+def execute(self):
+    print (self.children[0].execute())
+
+@addToClass(AST.PlineNode)
+def execute(self):
+    print (self.children[0].execute())
+
+@addToClass(AST.RectNode)
+def execute(self):
+    print (self.children[0].execute())
+    print (self.children[1].execute())
+    print (self.children[2].execute())
+    print (self.children[3].execute())
+
+@addToClass(AST.TextNode)
+def execute(self):
+    print (self.children[0].execute())
+    print (self.children[1].execute())
+    print (self.children[2].execute())
+
 @addToClass(AST.SetPageNode)
 def execute(self):
     print (self.children[0].execute())
     print (self.children[1].execute())
     print (self.children[2].execute())
 
+@addToClass(AST.SetUnit)
+def execute(self):
+    print (self.children[0].execute())
+
+@addToClass(AST.SetFont)
+def execute(self):
+    print (self.children[0].execute())
+    print (self.children[1].execute())
+    print (self.children[2].execute())
+    print (self.children[3].execute())
+
+@addToClass(AST.SetOpacity)
+def execute(self):
+    print (self.children[0].execute())
+
 @addToClass(AST.FillColorNode)
+def execute(self):
+    print (self.children[0].execute())
+
+@addToClass(AST.StrokeColorNode)
+def execute(self):
+    print (self.children[0].execute())
+
+@addToClass(AST.StrokeWidthNode)
 def execute(self):
     print (self.children[0].execute())
     
