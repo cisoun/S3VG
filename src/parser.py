@@ -25,22 +25,6 @@ def p_program_recursive(p):
 	''' program : statement SEMICOLON program '''
 	p[0] = AST.ProgramNode([p[1]] + p[3].children)
 
-def p_statement(p):
-	''' statement : assignation '''
-	p[0] = p[1]
-
-def p_arguments(p):
-	''' arguments : expression COMMA arguments '''
-	p[0] = AST.ProgramNode([p[1]] + p[3].children)
-
-def p_arguments(p):
-	''' arguments : expression COMMA arguments '''
-	p[0] = AST.ProgramNode([p[1]] + p[3].children)
-
-def p_statement_setpage(p):
-    ''' statement : SETPAGE '(' arguments ')' '''
-    p[0] = AST.SetPageNode(p[3])
-
 def p_assignment(p):
 	''' assignation : VAR IDENTIFIER EQUALS expression '''
 	p[0] = AST.AssignNode((AST.TokenNode(p[2]), p[4]))
@@ -50,9 +34,37 @@ def p_expression(p):
 	#p[0] = AST.TokenNode([p[1]] + p[3].children)
 	p[0] = AST.TokenNode(p[1])
 
-#def p_expression_recursive(p):
-#	''' expression : expression COMMA expression '''
-#	p[0] = AST.TokenNode([p[1]] + p[3].children)
+def p_statement(p):
+	''' statement : assignation '''
+	p[0] = p[1]
+
+
+
+def p_argument(p):
+	'''
+	argument : IDENTIFIER
+		| STRING
+		| NUMBER
+	'''
+	p[0] = AST.TokenNode(p[1])
+
+def p_argument_recursive(p):
+	''' arguments : argument COMMA arguments
+		| argument '''
+	if len(p) > 2:
+		p[0] = AST.ArgumentsNode([p[1]] + p[3].children)
+	else:
+		p[0] = AST.ArgumentsNode(p[1])
+	
+
+def p_parameters(p):
+	''' parameters : '(' arguments ')' '''
+	p[0] = AST.ParametersNode(p[2])
+
+def p_statement_setpage(p):
+    ''' statement : SETPAGE parameters '''
+    p[0] = AST.SetPageNode(p[2])
+
 
 def p_expression_identifier(p):
 	'''

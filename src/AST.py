@@ -123,6 +123,12 @@ class PrintNode(Node):
     
 class WhileNode(Node):
     type = 'while'
+
+class ParametersNode(Node):
+	type = 'parameters'
+
+class ArgumentsNode(Node):
+	type = 'arguments'
     
 class EntryNode(Node):
     type = 'ENTRY'
