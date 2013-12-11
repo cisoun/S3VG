@@ -129,9 +129,44 @@ class EntryNode(Node):
     def __init__(self):
         Node.__init__(self, None)
 
+class CircleNode(Node):
+	type = 'circle'
+
+class LineNode(Node):
+	type = 'Line'
+
+class PgoneNode(Node):
+	type = 'pgone'
+
+class PlineNode(Node):
+	type = 'pline'
+
+class RectNode(Node):
+	type = 'rect'
+
+class TextNode(Node):
+	type = 'text'
 
 class SetPageNode(Node):
 	type = 'setPage'
+
+class SetUnitNode(Node):
+	type = 'setUnit'
+
+class SetOpacityNode(Node):
+	type = 'setOpacity'
+
+class setFontNode(Node):
+	type = 'setFont'
+
+class FillStrokeNode(Node):
+	type = 'fillStroke'
+
+class StrokeColorNode(Node):
+	type = 'strokeColor'
+
+class StrokeWidthNode(Node):
+	type = 'strokeWidth'
     
 def addToClass(cls):
     ''' Décorateur permettant d'ajouter la fonction décorée en tant que méthode

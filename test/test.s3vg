@@ -1,6 +1,6 @@
 var rouge = "#f30";
 
-setPage(500, 500, "#fff");
+SetPage(500, 500, "#fff");
 
 fillColor(rouge);
 rect(10, 10, 100, 100);

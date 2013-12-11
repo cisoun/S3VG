@@ -6,8 +6,19 @@ reserved_words = (
 )
 
 methods = (
+        'circle',
+        'line',
+        'pgone',
+        'pline',
+        'rect',
+        'text',
 	'setPage',
-	'test'
+        'setUnit',
+        'setFont',
+        'setOpacity',
+        'fillColor',
+        'strokeColor',
+        'strokeWidth'
 )
 
 tokens = (
