@@ -11,8 +11,8 @@ operations = {
 
 vars = {}
 
-page_width = 0
-page_height = 0
+page_width = 10
+page_height = 10
 page_color = "#fff"
 
 
@@ -100,10 +100,10 @@ def execute(self):
 
 @addToClass(AST.SetPageNode)
 def execute(self):
-	args = parseParams(self.children[0])
+	args = getArgs(self)
 	page_width = args[0].execute()
 	page_height = args[1].execute()
-	page_color = args[1].execute()
+	page_color = args[2].execute()
 
 @addToClass(AST.SetUnitNode)
 def execute(self):
@@ -136,15 +136,18 @@ def execute(self):
 def assign(variable, value):
 	vars[variable.tok] = value.execute()
 
-def parseParams(parameters):
-	return parameters.children[0].children
+def getArgs(arguments):
+	return arguments.children[0].children
 
 if __name__ == "__main__":
 	from parser import parse
 	import sys
-	
-	
-	
+	import svgwrite
+
+	svg = svgwrite.Drawing(filename="./test.svg", size=(page_width, page_width), style="background-color:#f00")
+
 	prog = open(sys.argv[1]).read()
 	ast = parse(prog)
 	ast.execute()
+	
+	svg.save()
