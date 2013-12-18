@@ -19,7 +19,8 @@ methods = (
 	'setOpacity',
 	'fillColor',
 	'strokeColor',
-	'strokeWidth'
+	'strokeWidth',
+	'print'
 )
 
 tokens = (

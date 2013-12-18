@@ -31,7 +31,7 @@ def p_program_recursive(p):
 
 def p_structure_for(p):
 	''' structure : FOR IDENTIFIER EQUALS NUMBER TO NUMBER '{' program '}' '''
-	p[0] = AST.ForNode([AST.TokenNode(p[2]), AST.TokenNode(p[4]), AST.TokenNode(p[6]), p[8]])
+	p[0] = AST.ForNode((AST.TokenNode(p[2]), AST.TokenNode(p[4]), AST.TokenNode(p[6]), p[8]))
 
 
 def p_assignment(p):
@@ -83,6 +83,10 @@ def p_statement(p):
 	'''
 	p[0] = p[1]
 
+
+#
+# S3VG methods
+#
 def p_statement_circle(p):
     ''' statement : CIRCLE parameters '''
     p[0] = AST.CircleNode(p[2])
@@ -135,6 +139,10 @@ def p_statement_strokewidth(p):
     ''' statement : STROKEWIDTH parameters '''
     p[0] = AST.StrokeWidthNode(p[2])
 
+
+def p_statement_print(p):
+    ''' statement : PRINT parameters '''
+    p[0] = AST.PrintNode(p[2])
 
 def p_error(p):
 	print("Syntax error at '%s'" % p.value)

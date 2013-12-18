@@ -17,12 +17,22 @@ def execute(self):
     
 @addToClass(AST.TokenNode)
 def execute(self):
-    if isinstance(self.tok, str):
-        try:
-            return vars[self.tok]
-        except KeyError:
-            print ("*** Error: variable %s undefined!" % self.tok)
-    return self.tok
+	if isinstance(self.tok, str):
+		try:
+			if self.tok in vars:
+				return vars[self.tok]
+			return self.tok
+		except KeyError:
+			print ("*** Error: variable %s undefined!" % self.tok)
+	return self.tok
+
+@addToClass(AST.ParametersNode)
+def execute(self):
+	return self.children[0].execute()
+
+@addToClass(AST.ArgumentsNode)
+def execute(self):
+	return self.children[0].execute()
 
 @addToClass(AST.OpNode)
 def execute(self):
@@ -33,19 +43,23 @@ def execute(self):
 
 @addToClass(AST.AssignNode)
 def execute(self):
-    vars[self.children[0].tok] = self.children[1].execute()
+	assign(self.children[0], self.children[1])
 
 @addToClass(AST.ForNode)
 def execute(self):
+	assign(self.children[0], self.children[1])
+
 	i = self.children[0].execute()
 	first = self.children[1].execute()
-	last = self.children[2].execute()
-	for i in range[first, last]:
+	last = self.children[2].execute() + 1 # +1 sinon ignore la dernière itération.
+
+	for i in range(int(first), int(last)):
 		self.children[3].execute()
+		assign(self.children[0], AST.TokenNode(float(i + 1)))
 
 @addToClass(AST.PrintNode)
 def execute(self):
-    print (self.children[0].execute())
+	print (self.children[0].execute())
 
 @addToClass(AST.CircleNode)
 def execute(self):
@@ -83,22 +97,23 @@ def execute(self):
 
 @addToClass(AST.SetPageNode)
 def execute(self):
-    print (self.children[0].execute())
-    print (self.children[1].execute())
-    print (self.children[2].execute())
+	pass
+#    print (self.children[0].execute())
+#    print (self.children[1].execute())
+#    print (self.children[2].execute())
 
-@addToClass(AST.SetUnit)
+@addToClass(AST.SetUnitNode)
 def execute(self):
     print (self.children[0].execute())
 
-@addToClass(AST.SetFont)
+@addToClass(AST.SetFontNode)
 def execute(self):
     print (self.children[0].execute())
     print (self.children[1].execute())
     print (self.children[2].execute())
     print (self.children[3].execute())
 
-@addToClass(AST.SetOpacity)
+@addToClass(AST.SetOpacityNode)
 def execute(self):
     print (self.children[0].execute())
 
@@ -118,6 +133,10 @@ def execute(self):
 #def execute(self):
 #    while self.children[0].execute():
 #        self.children[1].execute()
+
+# Assigne une variable à une valeur..
+def assign(variable, value):
+	vars[variable.tok] = value.execute()
 
 if __name__ == "__main__":
     from parser import parse

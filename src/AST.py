@@ -165,7 +165,7 @@ class SetUnitNode(Node):
 class SetOpacityNode(Node):
 	type = 'setOpacity'
 
-class setFontNode(Node):
+class SetFontNode(Node):
 	type = 'setFont'
 
 class FillColorNode(Node):
