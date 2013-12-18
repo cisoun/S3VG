@@ -127,9 +127,6 @@ class WhileNode(Node):
 class ForNode(Node):
 	type = 'for'
 
-class ParametersNode(Node):
-	type = 'parameters'
-
 class ArgumentsNode(Node):
 	type = 'arguments'
     

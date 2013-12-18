@@ -11,6 +11,11 @@ operations = {
 
 vars = {}
 
+page_width = 0
+page_height = 0
+page_color = "#fff"
+
+
 @addToClass(AST.ProgramNode)
 def execute(self):
 	for c in self.children:
@@ -26,10 +31,6 @@ def execute(self):
 		except KeyError:
 			print ("*** Error: variable %s undefined!" % self.tok)
 	return self.tok
-
-@addToClass(AST.ParametersNode)
-def execute(self):
-	return self.children[0].execute()
 
 @addToClass(AST.ArgumentsNode)
 def execute(self):
@@ -99,10 +100,10 @@ def execute(self):
 
 @addToClass(AST.SetPageNode)
 def execute(self):
-	pass
-#	print (self.children[0].execute())
-#	print (self.children[1].execute())
-#	print (self.children[2].execute())
+	args = parseParams(self.children[0])
+	page_width = args[0].execute()
+	page_height = args[1].execute()
+	page_color = args[1].execute()
 
 @addToClass(AST.SetUnitNode)
 def execute(self):
@@ -135,10 +136,15 @@ def execute(self):
 def assign(variable, value):
 	vars[variable.tok] = value.execute()
 
+def parseParams(parameters):
+	return parameters.children[0].children
+
 if __name__ == "__main__":
 	from parser import parse
 	import sys
+	
+	
+	
 	prog = open(sys.argv[1]).read()
 	ast = parse(prog)
-	
 	ast.execute()

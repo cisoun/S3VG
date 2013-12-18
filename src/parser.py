@@ -62,20 +62,7 @@ def p_expression_op(p):
 	'''
 	p[0] = AST.OpNode(p[2], [p[1], p[3]])
 
-
-#def p_argument(p):
-#	'''
-#	argument : IDENTIFIER
-#		| STRING
-#		| NUMBER
-#	'''
-#	p[0] = AST.TokenNode(p[1])
-
-#def p_argument_expression(p):
-#	'''	argument : expression '''
-#	p[0] = p[1]
-
-def p_arguments(p):
+def p_argument_recursive(p):
 	''' arguments : expression COMMA arguments
 		| expression '''
 	if len(p) > 2:
@@ -83,10 +70,9 @@ def p_arguments(p):
 	else:
 		p[0] = AST.ArgumentsNode(p[1])
 
-def p_parameters(p):
-	''' parameters : '(' arguments ')' '''
-	p[0] = AST.ParametersNode(p[2])
-
+def p_arguments(p):
+	''' arguments : '(' arguments ')' '''
+	p[0] = p[2]
 
 def p_statement(p):
 	''' 
@@ -99,61 +85,61 @@ def p_statement(p):
 #
 # S3VG methods
 #
-def p_statement_circle(p):
-    ''' statement : CIRCLE parameters '''
-    p[0] = AST.CircleNode(p[2])
+#def p_statement_circle(p):
+#    ''' statement : CIRCLE parameters '''
+#    p[0] = AST.CircleNode(p[2])
 
-def p_statement_line(p):
-    ''' statement : LINE parameters '''
-    p[0] = AST.LineNode(p[2])
+#def p_statement_line(p):
+#    ''' statement : LINE parameters '''
+#    p[0] = AST.LineNode(p[2])
 
-def p_statement_pgone(p):
-    ''' statement : PGONE parameters '''
-    p[0] = AST.PgoneNode(p[2])
+#def p_statement_pgone(p):
+#    ''' statement : PGONE parameters '''
+#    p[0] = AST.PgoneNode(p[2])
 
-def p_statement_pline(p):
-    ''' statement : PLINE parameters '''
-    p[0] = AST.PlineNode(p[2])
+#def p_statement_pline(p):
+#    ''' statement : PLINE parameters '''
+#    p[0] = AST.PlineNode(p[2])
 
-def p_statement_rect(p):
-    ''' statement : RECT parameters '''
-    p[0] = AST.RectNode(p[2])
-    
-def p_statement_text(p):
-    ''' statement : TEXT parameters '''
-    p[0] = AST.TextNode(p[2])
+#def p_statement_rect(p):
+#    ''' statement : RECT parameters '''
+#    p[0] = AST.RectNode(p[2])
+#    
+#def p_statement_text(p):
+#    ''' statement : TEXT parameters '''
+#    p[0] = AST.TextNode(p[2])
 
 def p_statement_setpage(p):
-    ''' statement : SETPAGE parameters '''
+    ''' statement : SETPAGE arguments '''
     p[0] = AST.SetPageNode(p[2])
 
-def p_statement_setunit(p):
-    ''' statement : SETUNIT parameters '''
-    p[0] = AST.SetUnitNode(p[2])
+#def p_statement_setunit(p):
+#    ''' statement : SETUNIT parameters '''
+#    p[0] = AST.SetUnitNode(p[2])
 
-def p_statement_setfont(p):
-    ''' statement : SETFONT parameters '''
-    p[0] = AST.SetFontNode(p[2])
+#def p_statement_setfont(p):
+#    ''' statement : SETFONT parameters '''
+#    p[0] = AST.SetFontNode(p[2])
 
-def p_statement_setopacity(p):
-    ''' statement : SETOPACITY parameters '''
-    p[0] = AST.setOpacityNode(p[2])
+#def p_statement_setopacity(p):
+#    ''' statement : SETOPACITY parameters '''
+#    p[0] = AST.setOpacityNode(p[2])
 
-def p_statement_fillcolor(p):
-    ''' statement : FILLCOLOR parameters '''
-    p[0] = AST.FillColorNode(p[2])
+#def p_statement_fillcolor(p):
+#    ''' statement : FILLCOLOR parameters '''
+#    p[0] = AST.FillColorNode(p[2])
 
-def p_statement_strokecolor(p):
-    ''' statement : STROKECOLOR parameters '''
-    p[0] = AST.StrokeColorNode(p[2])
+#def p_statement_strokecolor(p):
+#    ''' statement : STROKECOLOR parameters '''
+#    p[0] = AST.StrokeColorNode(p[2])
 
-def p_statement_strokewidth(p):
-    ''' statement : STROKEWIDTH parameters '''
-    p[0] = AST.StrokeWidthNode(p[2])
+#def p_statement_strokewidth(p):
+#    ''' statement : STROKEWIDTH parameters '''
+#    p[0] = AST.StrokeWidthNode(p[2])
 
 
 def p_statement_print(p):
-    ''' statement : PRINT parameters '''
+    ''' statement : PRINT arguments '''
     p[0] = AST.PrintNode(p[2])
 
 def p_error(p):
