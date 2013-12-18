@@ -45,7 +45,8 @@ def p_expression(p):
 
 def p_expression_identifier(p):
 	'''
-		expression : NUMBER
+		expression : IDENTIFIER
+		| NUMBER
 		| STRING
 	'''
 	p[0] = AST.TokenNode(p[1])
@@ -54,18 +55,29 @@ def p_expression_parenthesis(p):
     ''' expression : '(' expression ')' '''
     p[0] = p[2]
 
-
-def p_argument(p):
+def p_expression_op(p):
 	'''
-	argument : IDENTIFIER
-		| STRING
-		| NUMBER
+		expression : expression ADD_OP expression
+		| expression MUL_OP expression
 	'''
-	p[0] = AST.TokenNode(p[1])
+	p[0] = AST.OpNode(p[2], [p[1], p[3]])
 
-def p_argument_recursive(p):
-	''' arguments : argument COMMA arguments
-		| argument '''
+
+#def p_argument(p):
+#	'''
+#	argument : IDENTIFIER
+#		| STRING
+#		| NUMBER
+#	'''
+#	p[0] = AST.TokenNode(p[1])
+
+#def p_argument_expression(p):
+#	'''	argument : expression '''
+#	p[0] = p[1]
+
+def p_arguments(p):
+	''' arguments : expression COMMA arguments
+		| expression '''
 	if len(p) > 2:
 		p[0] = AST.ArgumentsNode([p[1]] + p[3].children)
 	else:

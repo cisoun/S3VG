@@ -8,5 +8,5 @@ setPage(neuf, 500, "#fff");
 
 for i = 0 to 2 {
 	setPage(neuf, i, "#fff");
-	print(i);
+	print(i * 2 + 1);
 }
