@@ -15,9 +15,6 @@ precedence = (
     ('left', 'MUL_OP', 'DIV_OP'),
 )
 
-vars = {}
-
-
 def p_program_statement(p):
 	''' 
 		program : statement SEMICOLON
@@ -62,6 +59,10 @@ def p_expression_op(p):
 	'''
 	p[0] = AST.OpNode(p[2], [p[1], p[3]])
 
+def p_arguments(p):
+	''' arguments : '(' arguments ')' '''
+	p[0] = p[2]
+
 def p_argument_recursive(p):
 	''' arguments : expression COMMA arguments
 		| expression '''
@@ -69,10 +70,6 @@ def p_argument_recursive(p):
 		p[0] = AST.ArgumentsNode([p[1]] + p[3].children)
 	else:
 		p[0] = AST.ArgumentsNode(p[1])
-
-def p_arguments(p):
-	''' arguments : '(' arguments ')' '''
-	p[0] = p[2]
 
 def p_statement(p):
 	''' 
@@ -85,13 +82,18 @@ def p_statement(p):
 #
 # S3VG methods
 #
+
+def p_statement_fillcolor(p):
+    ''' statement : FILLCOLOR arguments '''
+    p[0] = AST.FillColorNode(p[2])
+
 #def p_statement_circle(p):
 #    ''' statement : CIRCLE parameters '''
 #    p[0] = AST.CircleNode(p[2])
 
-#def p_statement_line(p):
-#    ''' statement : LINE parameters '''
-#    p[0] = AST.LineNode(p[2])
+def p_statement_line(p):
+    ''' statement : LINE arguments '''
+    p[0] = AST.LineNode(p[2])
 
 #def p_statement_pgone(p):
 #    ''' statement : PGONE parameters '''
@@ -101,13 +103,13 @@ def p_statement(p):
 #    ''' statement : PLINE parameters '''
 #    p[0] = AST.PlineNode(p[2])
 
-#def p_statement_rect(p):
-#    ''' statement : RECT parameters '''
-#    p[0] = AST.RectNode(p[2])
-#    
 #def p_statement_text(p):
 #    ''' statement : TEXT parameters '''
 #    p[0] = AST.TextNode(p[2])
+
+def p_statement_rect(p):
+    ''' statement : RECT arguments '''
+    p[0] = AST.RectNode(p[2])
 
 def p_statement_setpage(p):
     ''' statement : SETPAGE arguments '''
@@ -125,17 +127,15 @@ def p_statement_setpage(p):
 #    ''' statement : SETOPACITY parameters '''
 #    p[0] = AST.setOpacityNode(p[2])
 
-#def p_statement_fillcolor(p):
-#    ''' statement : FILLCOLOR parameters '''
-#    p[0] = AST.FillColorNode(p[2])
 
-#def p_statement_strokecolor(p):
-#    ''' statement : STROKECOLOR parameters '''
-#    p[0] = AST.StrokeColorNode(p[2])
 
-#def p_statement_strokewidth(p):
-#    ''' statement : STROKEWIDTH parameters '''
-#    p[0] = AST.StrokeWidthNode(p[2])
+def p_statement_strokecolor(p):
+    ''' statement : STROKECOLOR arguments '''
+    p[0] = AST.StrokeColorNode(p[2])
+
+def p_statement_strokewidth(p):
+    ''' statement : STROKEWIDTH arguments '''
+    p[0] = AST.StrokeWidthNode(p[2])
 
 
 def p_statement_print(p):

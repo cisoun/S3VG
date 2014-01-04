@@ -1,12 +1,14 @@
-var rouge = "#f30";
-var neuf = 9;
+var rouge = "#df421e";
 
-print(neuf);
-print(rouge);
+setPage(500, 500, "#fff");
 
-setPage(neuf, 500, "#fff");
+fillColor(rouge);
+rect(0, 0, 100, 100);
 
-for i = 0 to 2 {
-	setPage(neuf, i, "#fff");
-	print(i * 2 + 1);
+strokeWidth(1);
+strokeColor("#330f07");
+for i = 0 to 9 {
+	print("étape " + i);
+	strokeWidth(i+1);
+	line(0, i*11, 100, i*11);
 }
