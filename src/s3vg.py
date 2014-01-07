@@ -8,6 +8,24 @@ operations = {
 	'-' : lambda x,y: x-y,
 	'*' : lambda x,y: x*y,
 	'/' : lambda x,y: x/y,
+	'%' : lambda x,y: x%y
+}
+
+constants = {
+	'BLACK'			: '#000',
+	'BLUE'			: '#314e6c',
+	'BROWN'			: '#663822',
+	'CM'			: 'cm',
+	'GREEN'			: '#267726',
+	'NULL'			: 0,
+	'ORANGE'		: '#df421e',
+	'PINK'			: '#c4757e',
+	'PURPLE'		: '#8700a8',
+	'PX'			: 'px',
+	'RED'			: '#ed0000',
+	'TRANSPARENT'	: '#00000000',
+	'YELLOW'		: '#ebb13d',
+	'WHITE'			: '#fff'
 }
 
 vars = {}
@@ -30,6 +48,8 @@ def execute(self):
 def execute(self):
 	if isinstance(self.tok, str):
 		try:
+			if self.tok in constants:
+				return constants[self.tok]
 			if self.tok in vars:
 				return vars[self.tok]
 			return self.tok
@@ -99,10 +119,15 @@ def execute(self):
 	y1 = args[1].execute()
 	x2 = args[2].execute()
 	y2 = args[3].execute()
-	print("STROKE", strokeColor)
+
 	svg.add(
-		svg.line(start=(x1, y1), end=(x2, y2), stroke=strokeColor, stroke_width=strokeWidth)
-	)
+		svg.line(
+			start=(x1, y1),
+			end=(x2, y2),
+			stroke=strokeColor,
+			stroke_width=strokeWidth
+			)
+		)
 
 
 @addToClass(AST.PgoneNode)
@@ -121,12 +146,14 @@ def execute(self):
 	y = args[1].execute()
 	width = args[2].execute()
 	height = args[3].execute()
+	radius = args[4].execute()
 
 	svg.add(
 		svg.rect(
+			insert=(x, y),
 			size=(width, height),
-			rx=x,
-			ry=y,
+			rx=radius,
+			ry=radius,
 			style=currentStyle()
 			)
 		)
