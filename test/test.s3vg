@@ -3,7 +3,7 @@ var rouge = "#df421e";
 setPage(500, 500, WHITE);
 
 fillColor(rouge);
-rect(20, 20, 100, 100, 0);
+rect(0, 0, 100, 100, 0);
 
 strokeWidth(1);
 strokeColor(YELLOW);
@@ -12,3 +12,6 @@ for i = 0 to 9 {
 	strokeWidth(i+1);
 	line(0, i*11, 100, i*11);
 }
+
+fillColor(BLUE);
+circle(150, 50, 50);

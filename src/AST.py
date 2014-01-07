@@ -92,7 +92,7 @@ class Node:
             return graph    
         
 class ProgramNode(Node):
-    type = 'Program'
+    type = 'program'
         
 class TokenNode(Node):
     type = 'token'
@@ -119,10 +119,7 @@ class AssignNode(Node):
     type = '='
     
 class PrintNode(Node):
-    type = 'print'
-    
-class WhileNode(Node):
-    type = 'while'
+	type = 'print'
 
 class ForNode(Node):
 	type = 'for'
@@ -139,7 +136,7 @@ class CircleNode(Node):
 	type = 'circle'
 
 class LineNode(Node):
-	type = 'Line'
+	type = 'line'
 
 class PgoneNode(Node):
 	type = 'pgone'

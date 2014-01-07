@@ -23,10 +23,16 @@ def p_program_statement(p):
 	p[0] = AST.ProgramNode(p[1])
 
 def p_program_recursive(p):
-	''' program : statement SEMICOLON program '''
-	p[0] = AST.ProgramNode([p[1]] + p[3].children)
+	'''
+		program : statement SEMICOLON program
+		| structure program
+	'''
+	if len(p) > 3:
+		p[0] = AST.ProgramNode([p[1]] + p[3].children)
+	else:
+		p[0] = AST.ProgramNode([p[1]] + p[2].children)
 
-def p_structure_for(p):
+def p_for(p):
 	''' structure : FOR IDENTIFIER EQUALS NUMBER TO NUMBER '{' program '}' '''
 	p[0] = AST.ForNode((AST.TokenNode(p[2]), AST.TokenNode(p[4]), AST.TokenNode(p[6]), p[8]))
 
@@ -87,9 +93,9 @@ def p_statement_fillcolor(p):
     ''' statement : FILLCOLOR arguments '''
     p[0] = AST.FillColorNode(p[2])
 
-#def p_statement_circle(p):
-#    ''' statement : CIRCLE parameters '''
-#    p[0] = AST.CircleNode(p[2])
+def p_statement_circle(p):
+    ''' statement : CIRCLE arguments '''
+    p[0] = AST.CircleNode(p[2])
 
 def p_statement_line(p):
     ''' statement : LINE arguments '''

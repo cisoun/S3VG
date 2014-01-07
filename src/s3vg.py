@@ -31,11 +31,11 @@ constants = {
 vars = {}
 
 svg = None
-fillColor = "#000"
+fillColor = '#000'
 page_width = 10
 page_height = 10
-page_color = "#fff"
-strokeColor = "#ff"
+page_color = '#fff'
+strokeColor = '#ff'
 strokeWidth = 1
 
 
@@ -80,33 +80,49 @@ def execute(self):
 
 @addToClass(AST.ForNode)
 def execute(self):
-	assign(self.children[0], self.children[1])
-
-	i = self.children[0].execute()
+	iterator = self.children[0].tok
 	first = self.children[1].execute()
-	last = self.children[2].execute() + 1 # +1 otherwise ignore last iteration.
+	last = self.children[2].execute()
+	program = self.children[3]
 
-	for i in range(int(first), int(last)):
-		self.children[3].execute() # Routine.
-		assign(self.children[0], AST.TokenNode(float(i + 1))) # Next iteration.
-		#print(self.children[0])
+	vars[iterator] = 0
+	for i in range(int(first), int(last) + 1): # +1 otherwise ignore last iteration.
+		program.execute() # Routine.
+		vars[iterator] = i + 1
 
 @addToClass(AST.PrintNode)
 def execute(self):
-	print (self.children[0].execute())
+	print(self.children[0].execute())
 
 
 @addToClass(AST.CircleNode)
 def execute(self):
-	print (self.children[0].execute())
-	print (self.children[1].execute())
-	print (self.children[2].execute())
+	global fillColor
+	global strokeColor
+	global strokeWidth
+
+	args = getArgs(self)
+
+	x = getArg(args, 0)
+	y = getArg(args, 1)
+	radius = getArg(args, 2)
+
+	svg.add(
+		svg.circle(
+			center=(x, y),
+			r=radius,
+			fill=fillColor,
+			stroke=strokeColor,
+			stroke_width=strokeWidth
+			)
+		)
+
 
 @addToClass(AST.FillColorNode)
 def execute(self):
 	global fillColor
 	args = getArgs(self)
-	fillColor = self.children[0].execute()
+	fillColor = getArg(args, 0)
 
 @addToClass(AST.LineNode)
 def execute(self):
@@ -115,10 +131,10 @@ def execute(self):
 
 	args = getArgs(self)
 
-	x1 = args[0].execute()
-	y1 = args[1].execute()
-	x2 = args[2].execute()
-	y2 = args[3].execute()
+	x1 = getArg(args, 0)
+	y1 = getArg(args, 1)
+	x2 = getArg(args, 2)
+	y2 = getArg(args, 3)
 
 	svg.add(
 		svg.line(
@@ -140,13 +156,17 @@ def execute(self):
 
 @addToClass(AST.RectNode)
 def execute(self):
+	global fillColor
+	global strokeColor
+	global strokeWidth
+
 	args = getArgs(self)
 
-	x = args[0].execute()
-	y = args[1].execute()
-	width = args[2].execute()
-	height = args[3].execute()
-	radius = args[4].execute()
+	x = getArg(args, 0)
+	y = getArg(args, 1)
+	width = getArg(args, 2)
+	height = getArg(args, 3)
+	radius = getArg(args, 4)
 
 	svg.add(
 		svg.rect(
@@ -154,7 +174,9 @@ def execute(self):
 			size=(width, height),
 			rx=radius,
 			ry=radius,
-			style=currentStyle()
+			fill=fillColor
+			stroke=strokeColor,
+			stroke_width=strokeWidth
 			)
 		)
 
@@ -168,9 +190,10 @@ def execute(self):
 def execute(self):
 	global svg
 	args = getArgs(self)
-	svg['width'] = args[0].execute()
-	svg['height'] = args[1].execute()
-	svg['style'] = 'background-color:' + args[2].execute()
+	
+	svg['width'] = getArg(args, 0)
+	svg['height'] = getArg(args, 1)
+	svg['style'] = 'background-color:' + getArg(args, 2)
 
 @addToClass(AST.SetUnitNode)
 def execute(self):
@@ -191,14 +214,14 @@ def execute(self):
 def execute(self):
 	global strokeColor
 	args = getArgs(self)
-	strokeColor = args[0].execute()
+	strokeColor = getArg(args, 0)
 	
 
 @addToClass(AST.StrokeWidthNode)
 def execute(self):
 	global strokeWidth
 	args = getArgs(self)
-	strokeWidth = args[0].execute()
+	strokeWidth = getArg(args, 0)
 
 # Assigne une variable à une valeur..
 def assign(variable, value):
@@ -211,8 +234,13 @@ def currentStyle():
 	
 	return 'fill:' + fillColor + ';stroke-width:' + str(strokeWidth) + ';stroke' + strokeColor
 
-def getArgs(arguments):
-	return arguments.children[0].children
+def getArgs(context):
+	return context.children[0].children
+
+def getArg(args, index):
+	if len(args) == 0:
+		return 0
+	return args[index].execute()
 
 if __name__ == "__main__":
 	from parser import parse
