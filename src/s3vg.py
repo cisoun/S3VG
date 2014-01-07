@@ -32,10 +32,11 @@ vars = {}
 
 svg = None
 fillColor = '#000'
+opacity = 1.0
 page_width = 10
 page_height = 10
 page_color = '#fff'
-strokeColor = '#ff'
+strokeColor = '#fff'
 strokeWidth = 1
 
 
@@ -64,9 +65,6 @@ def execute(self):
 @addToClass(AST.OpNode)
 def execute(self):
 	args = [c.execute() for c in self.children]
-	
-	#if len(args) == 1:
-	#	args.insert(0, 0)
 
 	# Allow strings concatenation.
 	if isinstance(args[0], str) or isinstance(args[1], str):
@@ -94,10 +92,10 @@ def execute(self):
 def execute(self):
 	print(self.children[0].execute())
 
-
 @addToClass(AST.CircleNode)
 def execute(self):
 	global fillColor
+	global opacity
 	global strokeColor
 	global strokeWidth
 
@@ -111,9 +109,7 @@ def execute(self):
 		svg.circle(
 			center=(x, y),
 			r=radius,
-			fill=fillColor,
-			stroke=strokeColor,
-			stroke_width=strokeWidth
+			**style()
 			)
 		)
 
@@ -140,10 +136,11 @@ def execute(self):
 		svg.line(
 			start=(x1, y1),
 			end=(x2, y2),
-			stroke=strokeColor,
-			stroke_width=strokeWidth
+			**style()
 			)
 		)
+
+
 
 
 @addToClass(AST.PgoneNode)
@@ -157,6 +154,7 @@ def execute(self):
 @addToClass(AST.RectNode)
 def execute(self):
 	global fillColor
+	global opacity
 	global strokeColor
 	global strokeWidth
 
@@ -174,9 +172,7 @@ def execute(self):
 			size=(width, height),
 			rx=radius,
 			ry=radius,
-			fill=fillColor
-			stroke=strokeColor,
-			stroke_width=strokeWidth
+			**style()
 			)
 		)
 
@@ -208,7 +204,8 @@ def execute(self):
 
 @addToClass(AST.SetOpacityNode)
 def execute(self):
-	print (self.children[0].execute())
+	global opacity
+	opacity = getArg(getArgs(self), 0)
 
 @addToClass(AST.StrokeColorNode)
 def execute(self):
@@ -227,12 +224,19 @@ def execute(self):
 def assign(variable, value):
 	vars[variable.tok] = value.execute()
 
-def currentStyle():
+def style():
 	global fillColor
+	global opacity
 	global strokeColor
 	global strokeWidth
-	
-	return 'fill:' + fillColor + ';stroke-width:' + str(strokeWidth) + ';stroke' + strokeColor
+
+	return {
+		'fill' : fillColor,
+		'fill_opacity' : opacity,
+		'stroke' : strokeColor,
+		'stroke_opacity' : opacity,
+		'stroke_width' : strokeWidth
+		}
 
 def getArgs(context):
 	return context.children[0].children

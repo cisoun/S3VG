@@ -129,9 +129,9 @@ def p_statement_setpage(p):
 #    ''' statement : SETFONT parameters '''
 #    p[0] = AST.SetFontNode(p[2])
 
-#def p_statement_setopacity(p):
-#    ''' statement : SETOPACITY parameters '''
-#    p[0] = AST.setOpacityNode(p[2])
+def p_statement_setopacity(p):
+    ''' statement : SETOPACITY arguments '''
+    p[0] = AST.SetOpacityNode(p[2])
 
 
 
