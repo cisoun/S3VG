@@ -12,32 +12,39 @@ operations = {
 }
 
 constants = {
+	# Colors taken from the Oxygen palette.
 	'BLACK'			: '#000',
-	'BLUE'			: '#314e6c',
-	'BROWN'			: '#663822',
+	'BLUE'			: '#0057AE',
+	'BROWN'			: '#75511A',
 	'CM'			: 'cm',
-	'GREEN'			: '#267726',
+	'GRAY'			: '#888A85',
+	'GREEN'			: '#37A42C',
 	'NULL'			: 0,
-	'ORANGE'		: '#df421e',
-	'PINK'			: '#c4757e',
-	'PURPLE'		: '#8700a8',
+	'ORANGE'		: '#EC7331',
+	'PINK'			: '#E20071',
+	'PURPLE'		: '#A02786',
 	'PX'			: 'px',
-	'RED'			: '#ed0000',
+	'RED'			: '#E20800',
 	'TRANSPARENT'	: '#00000000',
-	'YELLOW'		: '#ebb13d',
+	'YELLOW'		: '#FFDD00',
 	'WHITE'			: '#fff'
 }
 
-vars = {}
-
 svg = None
+
 fillColor = '#000'
+fontBold = False
+fontFamily = 'sans'
+fontItalic = False
+fontSize = 10
 opacity = 1.0
 page_width = 10
 page_height = 10
 page_color = '#fff'
 strokeColor = '#fff'
 strokeWidth = 1
+
+vars = {}
 
 
 @addToClass(AST.ProgramNode)
@@ -140,9 +147,6 @@ def execute(self):
 			)
 		)
 
-
-
-
 @addToClass(AST.PgoneNode)
 def execute(self):
 	print (self.children[0].execute())
@@ -178,9 +182,20 @@ def execute(self):
 
 @addToClass(AST.TextNode)
 def execute(self):
-	print (self.children[0].execute())
-	print (self.children[1].execute())
-	print (self.children[2].execute())
+	args = getArgs(self)
+
+	x = getArg(args, 0)
+	y = getArg(args, 1)
+	text = getArg(args, 2)
+
+	svg.add(
+		svg.text(
+			text=text,
+			insert=(x, y),
+			style=styleFont(),
+			**style()
+			)
+		)
 
 @addToClass(AST.SetPageNode)
 def execute(self):
@@ -197,11 +212,18 @@ def execute(self):
 
 @addToClass(AST.SetFontNode)
 def execute(self):
-	print (self.children[0].execute())
-	print (self.children[1].execute())
-	print (self.children[2].execute())
-	print (self.children[3].execute())
-
+	global fontBold
+	global fontFamily
+	global fontItalic
+	global fontSize
+	
+	args = getArgs(self)
+	
+	fontFamily = getArg(args, 0)
+	fontSize = getArg(args, 1)
+	fontBold = getArg(args, 2)
+	fontItalic = getArg(args, 3)
+	
 @addToClass(AST.SetOpacityNode)
 def execute(self):
 	global opacity
@@ -220,6 +242,22 @@ def execute(self):
 	args = getArgs(self)
 	strokeWidth = getArg(args, 0)
 
+@addToClass(AST.ToRGBNode)
+def execute(self):
+	args = getArgs(self)
+
+	red = checkRGB(getArg(args, 0))
+	green = checkRGB(getArg(args, 1))
+	blue = checkRGB(getArg(args, 2))
+
+	return ("#%.2x%.2x%.2x" % (red, green, blue))
+
+def checkRGB(value):
+	v = abs(int(value))
+	if v > 255:
+		v = 255
+	return v
+
 # Assigne une variable à une valeur..
 def assign(variable, value):
 	vars[variable.tok] = value.execute()
@@ -230,13 +268,38 @@ def style():
 	global strokeColor
 	global strokeWidth
 
-	return {
-		'fill' : fillColor,
-		'fill_opacity' : opacity,
-		'stroke' : strokeColor,
-		'stroke_opacity' : opacity,
-		'stroke_width' : strokeWidth
-		}
+	style = {}
+	style['fill'] = fillColor
+	style['stroke'] = strokeColor
+	style['stroke_width'] = strokeWidth
+
+	# By default, every object has an opacity of 1.
+	# Bypass if opacity is at 1 so the output code will be lighter.
+	if opacity < 1.0:
+		style['fill_opacity'] = opacity
+		style['stroke_opacity'] = opacity
+
+	return style
+
+def styleFont():
+	global fontBold
+	global fontFamily
+	global fontItalic
+	global fontSize
+	
+	styles = {}
+	styles['font-family'] = fontFamily
+	styles['font-size'] = fontSize
+	if fontBold: styles['font-weight'] = 'bold'
+	if fontItalic: styles['font-style'] = 'italic'
+
+	return styleFactory(**styles)
+
+def styleFactory(**styles):
+	result = ''
+	for s in styles:
+		result += str(s) + ':' + str(styles[s]) + ';'
+	return result
 
 def getArgs(context):
 	return context.children[0].children
@@ -245,6 +308,7 @@ def getArg(args, index):
 	if len(args) == 0:
 		return 0
 	return args[index].execute()
+
 
 if __name__ == "__main__":
 	from parser import parse

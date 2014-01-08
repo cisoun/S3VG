@@ -8,10 +8,11 @@ operations = {
 	'-' : lambda x,y: x-y,
 	'*' : lambda x,y: x*y,
 	'/' : lambda x,y: x/y,
+	'%' : lambda x,y: x%y
 }
 
 precedence = (
-    ('left', 'ADD_OP', 'MIN_OP'),
+    ('left', 'ADD_OP', 'SUB_OP'),
     ('left', 'MUL_OP', 'DIV_OP'),
 )
 
@@ -38,8 +39,14 @@ def p_for(p):
 
 
 def p_assignment(p):
-	''' assignation : VAR IDENTIFIER EQUALS expression '''
-	p[0] = AST.AssignNode((AST.TokenNode(p[2]), p[4]))
+	'''
+		assignation : VAR IDENTIFIER EQUALS expression
+		| IDENTIFIER EQUALS expression
+	'''
+	if len(p) > 4:
+		p[0] = AST.AssignNode((AST.TokenNode(p[2]), p[4]))
+	else:
+		p[0] = AST.AssignNode((AST.TokenNode(p[1]), p[3]))
 
 
 def p_expression(p):
@@ -54,6 +61,12 @@ def p_expression_identifier(p):
 	'''
 	p[0] = AST.TokenNode(p[1])
 
+def p_expression_statement(p):
+	'''
+		expression : statement
+	'''
+	p[0] = p[1]
+
 def p_expression_parenthesis(p):
     ''' expression : '(' expression ')' '''
     p[0] = p[2]
@@ -61,7 +74,10 @@ def p_expression_parenthesis(p):
 def p_expression_op(p):
 	'''
 		expression : expression ADD_OP expression
+		| expression SUB_OP expression
 		| expression MUL_OP expression
+		| expression DIV_OP expression
+		| expression MOD_OP expression
 	'''
 	p[0] = AST.OpNode(p[2], [p[1], p[3]])
 
@@ -109,9 +125,9 @@ def p_statement_line(p):
 #    ''' statement : PLINE parameters '''
 #    p[0] = AST.PlineNode(p[2])
 
-#def p_statement_text(p):
-#    ''' statement : TEXT parameters '''
-#    p[0] = AST.TextNode(p[2])
+def p_statement_text(p):
+    ''' statement : TEXT arguments '''
+    p[0] = AST.TextNode(p[2])
 
 def p_statement_rect(p):
     ''' statement : RECT arguments '''
@@ -125,15 +141,13 @@ def p_statement_setpage(p):
 #    ''' statement : SETUNIT parameters '''
 #    p[0] = AST.SetUnitNode(p[2])
 
-#def p_statement_setfont(p):
-#    ''' statement : SETFONT parameters '''
-#    p[0] = AST.SetFontNode(p[2])
+def p_statement_setfont(p):
+    ''' statement : SETFONT arguments '''
+    p[0] = AST.SetFontNode(p[2])
 
 def p_statement_setopacity(p):
     ''' statement : SETOPACITY arguments '''
     p[0] = AST.SetOpacityNode(p[2])
-
-
 
 def p_statement_strokecolor(p):
     ''' statement : STROKECOLOR arguments '''
@@ -142,6 +156,10 @@ def p_statement_strokecolor(p):
 def p_statement_strokewidth(p):
     ''' statement : STROKEWIDTH arguments '''
     p[0] = AST.StrokeWidthNode(p[2])
+
+def p_statement_torbg(p):
+	''' statement : TORGB arguments '''
+	p[0] = AST.ToRGBNode(p[2])
 
 
 def p_statement_print(p):

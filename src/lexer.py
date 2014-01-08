@@ -20,6 +20,7 @@ methods = (
 	'fillColor',
 	'strokeColor',
 	'strokeWidth',
+	'toRGB',
 	'print'
 )
 
@@ -32,7 +33,7 @@ tokens = (
 	'SEMICOLON',
 	'COMMA',
 	'ADD_OP',
-	'MIN_OP',
+	'SUB_OP',
 	'MUL_OP',
 	'DIV_OP',
 	'MOD_OP'
@@ -48,7 +49,7 @@ def t_ADD_OP(t):
 	r'\+'
 	return t
 
-def t_MIN_OP(t):
+def t_SUB_OP(t):
 	r'\-'
 	return t
 	
@@ -61,7 +62,7 @@ def t_DIV_OP(t):
 	return t
 
 def t_MOD_OP(t):
-	r'%'
+	r'\%'
 	return t
 
 def t_NUMBER(t):

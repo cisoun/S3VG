@@ -173,6 +173,9 @@ class StrokeColorNode(Node):
 
 class StrokeWidthNode(Node):
 	type = 'strokeWidth'
+
+class ToRGBNode(Node):
+	type = 'toRGB'
     
 def addToClass(cls):
     ''' Décorateur permettant d'ajouter la fonction décorée en tant que méthode
