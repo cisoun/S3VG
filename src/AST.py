@@ -114,18 +114,24 @@ class OpNode(Node):
         
     def __repr__(self):
         return "%s (%s)" % (self.op, self.nbargs)
-    
+
+class ArgumentsNode(Node):
+	type = 'arguments'
+
 class AssignNode(Node):
     type = '='
     
 class PrintNode(Node):
 	type = 'print'
 
+class FillColorNode(Node):
+	type = 'fillColor'
+
+class FillStrokeNode(Node):
+	type = 'fillStroke'
+
 class ForNode(Node):
 	type = 'for'
-
-class ArgumentsNode(Node):
-	type = 'arguments'
     
 class EntryNode(Node):
     type = 'ENTRY'
@@ -138,8 +144,8 @@ class CircleNode(Node):
 class LineNode(Node):
 	type = 'line'
 
-class PgoneNode(Node):
-	type = 'pgone'
+class PgonNode(Node):
+	type = 'pgon'
 
 class PlineNode(Node):
 	type = 'pline'
@@ -153,20 +159,11 @@ class TextNode(Node):
 class SetPageNode(Node):
 	type = 'setPage'
 
-class SetUnitNode(Node):
-	type = 'setUnit'
-
 class SetOpacityNode(Node):
 	type = 'setOpacity'
 
 class SetFontNode(Node):
 	type = 'setFont'
-
-class FillColorNode(Node):
-	type = 'fillColor'
-
-class FillStrokeNode(Node):
-	type = 'fillStroke'
 
 class StrokeColorNode(Node):
 	type = 'strokeColor'

@@ -45,6 +45,7 @@ strokeColor = '#fff'
 strokeWidth = 1
 
 vars = {}
+coords = {}
 
 
 @addToClass(AST.ProgramNode)
@@ -147,13 +148,38 @@ def execute(self):
 			)
 		)
 
-@addToClass(AST.PgoneNode)
+@addToClass(AST.PgonNode)
 def execute(self):
-	print (self.children[0].execute())
+	args = getArgs(self)
+	points = []
+
+	for i in range(0, len(args) - 1):
+		coords = getArg(args, i)
+		points.append(coords.split(','))
+
+	svg.add(
+		svg.polygon(
+			points=points,
+			**style()
+			)
+		)
+	
 
 @addToClass(AST.PlineNode)
 def execute(self):
-	print (self.children[0].execute())
+	args = getArgs(self)
+	points = []
+
+	for i in range(0, len(args) - 1):
+		coords = getArg(args, i)
+		points.append(coords.split(','))
+
+	svg.add(
+		svg.polyline(
+			points=points,
+			**style()
+			)
+		)
 
 @addToClass(AST.RectNode)
 def execute(self):
@@ -205,10 +231,6 @@ def execute(self):
 	svg['width'] = getArg(args, 0)
 	svg['height'] = getArg(args, 1)
 	svg['style'] = 'background-color:' + getArg(args, 2)
-
-@addToClass(AST.SetUnitNode)
-def execute(self):
-	print (self.children[0].execute())
 
 @addToClass(AST.SetFontNode)
 def execute(self):

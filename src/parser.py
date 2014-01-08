@@ -2,6 +2,7 @@ import ply.yacc as yacc
 
 from lexer import tokens
 import AST
+from AST import addToClass
 
 operations = {
 	'+' : lambda x,y: x+y,
@@ -102,6 +103,12 @@ def p_statement(p):
 
 
 #
+# S3VG objects
+#
+
+
+
+#
 # S3VG methods
 #
 
@@ -117,13 +124,13 @@ def p_statement_line(p):
     ''' statement : LINE arguments '''
     p[0] = AST.LineNode(p[2])
 
-#def p_statement_pgone(p):
-#    ''' statement : PGONE parameters '''
-#    p[0] = AST.PgoneNode(p[2])
+def p_statement_pgon(p):
+    ''' statement : PGON arguments '''
+    p[0] = AST.PgonNode(p[2])
 
-#def p_statement_pline(p):
-#    ''' statement : PLINE parameters '''
-#    p[0] = AST.PlineNode(p[2])
+def p_statement_pline(p):
+    ''' statement : PLINE arguments '''
+    p[0] = AST.PlineNode(p[2])
 
 def p_statement_text(p):
     ''' statement : TEXT arguments '''
@@ -136,10 +143,6 @@ def p_statement_rect(p):
 def p_statement_setpage(p):
     ''' statement : SETPAGE arguments '''
     p[0] = AST.SetPageNode(p[2])
-
-#def p_statement_setunit(p):
-#    ''' statement : SETUNIT parameters '''
-#    p[0] = AST.SetUnitNode(p[2])
 
 def p_statement_setfont(p):
     ''' statement : SETFONT arguments '''
@@ -173,20 +176,45 @@ def p_error(p):
 def parse(program):
     return yacc.parse(program)
 
+@addToClass(AST.Node)
+def thread(self, lastNode):
+    for c in self.children:
+        lastNode = c.thread(lastNode)
+    lastNode.addNext(self)
+    return self
+
+#@addToClass(AST.ForNode)
+#def thread(self, lastNode):
+#    beforeCond = lastNode
+#    exitCond = self.children[0].thread(lastNode)
+#    exitCond.addNext(self)
+#    exitBody = self.children[1].thread(self)
+#    exitBody.addNext(beforeCond.next[-1])
+#    return self
+
+def thread(tree):
+    entry = AST.EntryNode()
+    tree.thread(entry)
+    return entry
+
+
 yacc.yacc(outputdir='generated')
 
 if __name__ == "__main__":
-    import sys 
-    	
-    prog = open(sys.argv[1]).read()
-    result = yacc.parse(prog)
-    if result:
-        print (result)
+	import sys, os
 
-        import os
-        graph = result.makegraphicaltree()
-        name = os.path.splitext(sys.argv[1])[0]+'-ast.pdf'
-        graph.write_pdf(name) 
-        print ("wrote ast to", name)
-    else:
-        print ("Parsing returned no result!")
+	prog = open(sys.argv[1]).read()
+	result = yacc.parse(prog)
+	if result:
+		print (result)
+
+		ast = parse(prog)
+		entry = thread(ast)
+		graph = ast.makegraphicaltree()
+		entry.threadTree(graph)
+
+		name = os.path.splitext(sys.argv[1])[0]+'-ast.pdf'
+		graph.write_pdf(name) 
+		print ("wrote ast to", name)
+	else:
+		print ("Parsing returned no result!")

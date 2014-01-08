@@ -9,12 +9,11 @@ reserved_words = (
 methods = (
 	'circle',
 	'line',
-	'pgone',
+	'pgon',
 	'pline',
 	'rect',
 	'text',
 	'setPage',
-	'setUnit',
 	'setFont',
 	'setOpacity',
 	'fillColor',
@@ -26,7 +25,6 @@ methods = (
 
 tokens = (
 	'IDENTIFIER',
-	'METHOD',
 	'NUMBER',
 	'STRING',
 	'EQUALS',
