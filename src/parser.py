@@ -49,6 +49,10 @@ def p_assignment(p):
 	else:
 		p[0] = AST.AssignNode((AST.TokenNode(p[1]), p[3]))
 
+def p_assignment_coords(p):
+	'''	assignation : COORDS IDENTIFIER '''
+	p[0] = AST.CoordsNode(p[2])
+
 
 def p_expression(p):
 	''' expression : expression COMMA '''
@@ -101,6 +105,10 @@ def p_statement(p):
 	'''
 	p[0] = p[1]
 
+def p_statement_coordscallback(p):
+	''' statement : IDENTIFIER DOT IDENTIFIER arguments '''
+	p[0] = AST.CoordsCallbackNode((AST.CoordsNode(p[1]), AST.TokenNode(p[3]), p[4]))
+	
 
 #
 # S3VG objects

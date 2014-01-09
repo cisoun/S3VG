@@ -3,7 +3,8 @@ import ply.lex as lex
 reserved_words = (
 	'var',
 	'for',
-	'to'
+	'to',
+	'Coords'
 )
 
 methods = (
@@ -28,6 +29,7 @@ tokens = (
 	'NUMBER',
 	'STRING',
 	'EQUALS',
+	'DOT',
 	'SEMICOLON',
 	'COMMA',
 	'ADD_OP',
@@ -38,6 +40,7 @@ tokens = (
 ) + tuple(map(lambda s:s.upper(), methods)) + tuple(map(lambda s:s.upper(), reserved_words))
 
 literals = '();={}'
+t_DOT = r'\.'
 t_SEMICOLON = r';'
 t_EQUALS = r'='
 t_COMMA = r','

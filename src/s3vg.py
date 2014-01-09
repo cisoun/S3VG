@@ -1,3 +1,4 @@
+from coords import Coords
 import svgwrite
 import AST
 from AST import addToClass
@@ -84,6 +85,23 @@ def execute(self):
 def execute(self):
 	assign(self.children[0], self.children[1])
 
+@addToClass(AST.CoordsCallbackNode)
+def execute(self):
+	obj = self.children[0].tok
+	func = self.children[1].tok
+	args = self.children[2]
+	x = args.children[0].execute()
+	y = args.children[1].execute()
+
+	c = coords[obj]
+	add = getattr(c, func)
+	add(x, y)
+
+@addToClass(AST.CoordsNode)
+def execute(self):
+	coords[self.tok] = Coords()
+	return coords[self.tok]
+
 @addToClass(AST.ForNode)
 def execute(self):
 	iterator = self.children[0].tok
@@ -95,10 +113,6 @@ def execute(self):
 	for i in range(int(first), int(last) + 1): # +1 otherwise ignore last iteration.
 		program.execute() # Routine.
 		vars[iterator] = i + 1
-
-@addToClass(AST.PrintNode)
-def execute(self):
-	print(self.children[0].execute())
 
 @addToClass(AST.CircleNode)
 def execute(self):
@@ -120,7 +134,6 @@ def execute(self):
 			**style()
 			)
 		)
-
 
 @addToClass(AST.FillColorNode)
 def execute(self):
@@ -148,14 +161,28 @@ def execute(self):
 			)
 		)
 
+@addToClass(AST.PrintNode)
+def execute(self):
+	print(self.children[0].execute())
+
 @addToClass(AST.PgonNode)
 def execute(self):
+	global coords
 	args = getArgs(self)
-	points = []
 
-	for i in range(0, len(args) - 1):
-		coords = getArg(args, i)
-		points.append(coords.split(','))
+	points = []
+	
+	for n, i in enumerate(args):
+		# If coords object.
+		if i.tok in coords:
+			args[n] = coords[i.tok]
+			l = coords[i.tok]
+			for x in l:
+				points.append(x)
+		# If normal value.
+		else:
+			c = args[n].execute()
+			points.append(c.replace(" ", "").split(','))
 
 	svg.add(
 		svg.polygon(
@@ -170,9 +197,17 @@ def execute(self):
 	args = getArgs(self)
 	points = []
 
-	for i in range(0, len(args) - 1):
-		coords = getArg(args, i)
-		points.append(coords.split(','))
+	for n, i in enumerate(args):
+		# If coords object.
+		if i.tok in coords:
+			args[n] = coords[i.tok]
+			l = coords[i.tok]
+			for x in l:
+				points.append(x)
+		# If normal value.
+		else:
+			c = args[n].execute()
+			points.append(c.replace(" ", "").split(','))
 
 	svg.add(
 		svg.polyline(
@@ -337,11 +372,10 @@ if __name__ == "__main__":
 	import sys
 	import svgwrite
 	
-	svg = svgwrite.Drawing(filename="./test.svg")
+	svg = svgwrite.Drawing(filename=sys.argv[2])
 
 	prog = open(sys.argv[1]).read()
 	ast = parse(prog)
 	ast.execute()
 	
-	#svg = svgwrite.Drawing(filename="./test.svg", size=(page_width, page_width), style="background-color:#fff")
 	svg.save()

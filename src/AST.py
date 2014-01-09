@@ -119,10 +119,27 @@ class ArgumentsNode(Node):
 	type = 'arguments'
 
 class AssignNode(Node):
-    type = '='
+    type = 'var'
+
+class CircleNode(Node):
+	type = 'circle'
+
+class CoordsCallbackNode(Node):
+	type = 'callback'
+
+class CoordsNode(Node):
+	type = 'Coords'
+	def __init__(self, tok):
+		Node.__init__(self)
+		self.tok = tok
+
+	def __repr__(self):
+		return repr(self.tok)
     
-class PrintNode(Node):
-	type = 'print'
+class EntryNode(Node):
+    type = 'ENTRY'
+    def __init__(self):
+        Node.__init__(self, None)
 
 class FillColorNode(Node):
 	type = 'fillColor'
@@ -132,14 +149,6 @@ class FillStrokeNode(Node):
 
 class ForNode(Node):
 	type = 'for'
-    
-class EntryNode(Node):
-    type = 'ENTRY'
-    def __init__(self):
-        Node.__init__(self, None)
-
-class CircleNode(Node):
-	type = 'circle'
 
 class LineNode(Node):
 	type = 'line'
@@ -149,12 +158,12 @@ class PgonNode(Node):
 
 class PlineNode(Node):
 	type = 'pline'
+    
+class PrintNode(Node):
+	type = 'print'
 
 class RectNode(Node):
 	type = 'rect'
-
-class TextNode(Node):
-	type = 'text'
 
 class SetPageNode(Node):
 	type = 'setPage'
@@ -170,6 +179,9 @@ class StrokeColorNode(Node):
 
 class StrokeWidthNode(Node):
 	type = 'strokeWidth'
+
+class TextNode(Node):
+	type = 'text'
 
 class ToRGBNode(Node):
 	type = 'toRGB'
